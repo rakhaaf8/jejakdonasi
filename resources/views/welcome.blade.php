@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JejakDonasi - Transparansi Tanpa Kompromi</title>
     
-    <!-- Google Fonts: Inter & Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
@@ -26,14 +22,7 @@
                         mono: ['"Space Mono"', 'monospace'],
                     },
                     colors: {
-                        slate: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 800: '#1e293b', 900: '#0f172a' }
                     }
                 }
             }
@@ -45,91 +34,25 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         [x-cloak] { display: none !important; }
-        
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-        
-        /* FIX ANIMASI MUTER: Keyframes Manual */
-        @keyframes spin { 
-            100% { transform: rotate(360deg); } 
-        }
-
-        /* Efek gerigi nota digital kasir */
-        .receipt-edge {
-            background-image: radial-gradient(circle at 10px 0, transparent 10px, white 11px);
-            background-size: 20px 20px;
-            background-repeat: repeat-x;
-            height: 10px;
-        }
-        .receipt-edge-bottom {
-            background-image: radial-gradient(circle at 10px 10px, transparent 10px, white 11px);
-            background-size: 20px 20px;
-            background-repeat: repeat-x;
-            height: 10px;
-        }
+        .glass-nav { background: rgba(248, 250, 252, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .receipt-edge { background-image: radial-gradient(circle at 10px 0, transparent 10px, white 11px); background-size: 20px 20px; background-repeat: repeat-x; height: 10px; }
+        .receipt-edge-bottom { background-image: radial-gradient(circle at 10px 10px, transparent 10px, white 11px); background-size: 20px 20px; background-repeat: repeat-x; height: 10px; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased overflow-x-hidden selection:bg-slate-900 selection:text-white" 
-      x-data="appData()" 
-      @scroll.window="scrolled = (window.pageYOffset > 50)">
+<body class="bg-slate-50 text-slate-900 font-sans antialiased overflow-x-hidden selection:bg-slate-900 selection:text-white" x-data="appData()">
 
     <!-- Flash Message Success Indicator -->
     @if(session('success'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-6 py-3 rounded-full font-bold text-sm shadow-xl flex items-center gap-3">
-            <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-6 py-3 rounded-full font-bold text-sm shadow-xl flex items-center gap-3">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             {{ session('success') }}
         </div>
     @endif
 
-    <!-- 1. COSMOS FLOATING BACKGROUND (HARDCODE BLADE LOKAL + ALPINE SCROLL DYNAMICS + INLINE CSS ANIMATION) -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0 flex items-center justify-center bg-slate-50">
-        <!-- Kontainer Utama: Putar Manual via Inline CSS & Memudar saat di-scroll via Alpine -->
-        <div class="absolute w-[250vw] h-[250vw] md:w-[150vw] md:h-[150vw] transition-all duration-1000 ease-in-out"
-             style="animation: spin 150s linear infinite;"
-             :class="scrolled ? 'opacity-10 blur-sm scale-95' : 'opacity-40 blur-none scale-100'">
-            
-            <!-- 30 Gambar manual tersebar ekstrem ke seluruh layar -->
-            <img src="{{ asset('images/banjir.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-12 md:w-20 rounded-3xl rotate-12 top-[5%] left-[5%]" alt="bg">
-            <img src="{{ asset('images/bg1.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-16 md:w-24 rounded-full -rotate-6 top-[25%] left-[10%]" alt="bg">
-            <img src="{{ asset('images/bg7.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-24 md:w-32 rounded-[2rem] rotate-45 top-[50%] left-[2%]" alt="bg">
-            <img src="{{ asset('images/gempa2.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-20 md:w-28 rounded-xl -rotate-12 top-[70%] left-[12%]" alt="bg">
-            <img src="{{ asset('images/kelaparan.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-12 md:w-16 rounded-full rotate-90 top-[90%] left-[5%]" alt="bg">
+    <!-- LATAR BELAKANG MINIMALIS BERSIH -->
+    <div class="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wMikiLz48L3N2Zz4=')] pointer-events-none z-0"></div>
 
-            <img src="{{ asset('images/banjir2.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-24 md:w-32 rounded-3xl -rotate-45 top-[15%] left-[25%]" alt="bg">
-            <img src="{{ asset('images/bg2.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-16 md:w-20 rounded-[2rem] rotate-6 top-[35%] left-[20%]" alt="bg">
-            <img src="{{ asset('images/bg8.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-28 md:w-40 rounded-full -rotate-12 top-[60%] left-[30%]" alt="bg">
-            <img src="{{ asset('images/gempa3.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-16 md:w-24 rounded-xl rotate-12 top-[80%] left-[22%]" alt="bg">
-            <img src="{{ asset('images/longsor.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-20 md:w-28 rounded-3xl -rotate-45 top-[95%] left-[30%]" alt="bg">
-
-            <img src="{{ asset('images/banjir3.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-20 md:w-28 rounded-[2rem] rotate-45 top-[5%] left-[45%]" alt="bg">
-            <img src="{{ asset('images/bg3.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-12 md:w-16 rounded-full -rotate-12 top-[25%] left-[50%]" alt="bg">
-            <img src="{{ asset('images/bg9.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-24 md:w-32 rounded-3xl rotate-90 top-[45%] left-[42%]" alt="bg">
-            <img src="{{ asset('images/gunung.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-16 md:w-24 rounded-xl -rotate-6 top-[65%] left-[55%]" alt="bg">
-            <img src="{{ asset('images/reboisasi.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-28 md:w-36 rounded-[2rem] rotate-12 top-[85%] left-[45%]" alt="bg">
-
-            <img src="{{ asset('images/banjir4.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-16 md:w-20 rounded-full -rotate-45 top-[15%] left-[65%]" alt="bg">
-            <img src="{{ asset('images/bg4.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-24 md:w-32 rounded-3xl rotate-12 top-[35%] left-[70%]" alt="bg">
-            <img src="{{ asset('images/bg10.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-20 md:w-24 rounded-xl -rotate-12 top-[55%] left-[60%]" alt="bg">
-            <img src="{{ asset('images/gunung2.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-12 md:w-16 rounded-[2rem] rotate-6 top-[75%] left-[75%]" alt="bg">
-            <img src="{{ asset('images/sekolah.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-28 md:w-32 rounded-full -rotate-45 top-[95%] left-[65%]" alt="bg">
-
-            <img src="{{ asset('images/banjir5.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-28 md:w-36 rounded-3xl rotate-90 top-[5%] left-[85%]" alt="bg">
-            <img src="{{ asset('images/bg5.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-20 md:w-24 rounded-xl -rotate-12 top-[25%] left-[90%]" alt="bg">
-            <img src="{{ asset('images/bg11.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-12 md:w-16 rounded-[2rem] rotate-45 top-[45%] left-[80%]" alt="bg">
-            <img src="{{ asset('images/kebakaran.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-24 md:w-28 rounded-full -rotate-6 top-[65%] left-[95%]" alt="bg">
-            <img src="{{ asset('images/topan.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-16 md:w-20 rounded-3xl rotate-12 top-[85%] left-[85%]" alt="bg">
-
-            <img src="{{ asset('images/bg6.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-20 md:w-28 rounded-xl -rotate-45 top-[10%] left-[50%]" alt="bg">
-            <img src="{{ asset('images/gempa.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-32 md:w-40 rounded-[2rem] rotate-6 top-[30%] left-[80%]" alt="bg">
-            <img src="{{ asset('images/kebakaran2.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-16 md:w-20 rounded-full -rotate-90 top-[50%] left-[20%]" alt="bg">
-            <img src="{{ asset('images/kekeringan.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-24 md:w-32 rounded-3xl rotate-12 top-[70%] left-[40%]" alt="bg">
-            <img src="{{ asset('images/topan2.avif') }}" class="absolute mix-blend-multiply aspect-square object-cover grayscale-[30%] shadow-md w-20 md:w-24 rounded-xl -rotate-12 top-[90%] left-[60%]" alt="bg">
-
-        </div>
-        <!-- Vignette Mask Transparan ke Putih Slate-50 -->
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#f8fafc_80%)]"></div>
-    </div>
-
-    <!-- 2. NAVBAR LIGHT -->
+    <!-- NAVBAR LIGHT -->
     <nav class="fixed top-0 w-full z-40 glass-nav border-b border-slate-200 transition-all duration-300">
         <div class="max-w-[90rem] mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-xl font-bold tracking-tighter flex items-center gap-3 relative z-10 text-slate-900">
@@ -141,23 +64,20 @@
             
             <div class="flex items-center gap-3 md:gap-4 relative z-10">
                 <a href="#ledger" class="hidden md:block text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors mr-2">Ledger Publik</a>
-                
-                <!-- Tombol Lapor Kejanggalan -->
-                <button @click="isReportOpen = true" class="text-sm font-bold text-red-600 hover:text-red-700 transition-colors duration-300 border border-red-200 hover:bg-red-100 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-red-50 shadow-sm">
+                <button @click="isReportOpen = true" class="text-sm font-bold text-red-600 hover:text-red-700 transition-colors duration-300 border border-red-200 hover:bg-red-50 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-white shadow-sm">
                     Lapor Kejanggalan
                 </button>
-                
                 <a href="{{ route('login') }}" class="text-sm font-bold text-slate-700 hover:text-white transition-colors duration-300 border border-slate-300 hover:border-slate-900 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-white hover:bg-slate-900 shadow-sm">
-                    Masuk Admin
+                    Masuk
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- 3. HERO SECTION -->
+    <!-- HERO SECTION -->
     <header class="relative min-h-[95vh] flex flex-col justify-center items-center text-center px-6 pt-32 pb-20 z-10">
         <div class="max-w-5xl" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white/60 backdrop-blur-md text-xs font-bold text-slate-600 mb-8 transition-all duration-1000 transform shadow-sm" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white shadow-sm text-xs font-bold text-slate-600 mb-8 transition-all duration-1000 transform" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 Web2.5 Public Ledger Aktif
             </div>
@@ -171,90 +91,67 @@
             </p>
             
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 transition-all duration-1000 delay-300 transform" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
-                <a href="#initiatives" class="w-full sm:w-auto bg-slate-900 text-white px-10 py-4 rounded-full text-sm md:text-base font-bold hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 shadow-xl flex justify-center">
+                <a href="#initiatives" class="w-full sm:w-auto bg-slate-900 text-white px-10 py-4.5 rounded-full text-sm md:text-base font-bold hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 shadow-xl flex justify-center">
                     Lihat Inisiatif
                 </a>
-                <a href="#how-it-works" class="w-full sm:w-auto bg-white border border-slate-300 text-slate-700 px-10 py-4 rounded-full text-sm md:text-base font-bold hover:bg-slate-100 transition-all duration-300 flex justify-center shadow-sm">
+                <a href="#how-it-works" class="w-full sm:w-auto bg-white border border-slate-300 text-slate-700 px-10 py-4.5 rounded-full text-sm md:text-base font-bold hover:bg-slate-50 transition-all duration-300 flex justify-center shadow-sm">
                     Cara Kerja
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- 4. PROFIL & KEPERCAYAAN -->
-    <section class="py-24 px-6 relative z-10 border-y border-slate-200 bg-white">
-        <div class="max-w-[90rem] mx-auto text-center" x-data="{ shown: false }" x-intersect.once="shown = true">
-            <h2 class="text-3xl md:text-5xl font-black tracking-tighter text-slate-900 mb-6 transition-all duration-1000 transform" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">Kenapa Memilih JejakDonasi?</h2>
-            <p class="text-lg md:text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-medium transition-all duration-1000 delay-100 transform" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
-                Krisis kepercayaan publik terhadap pengelolaan donasi seringkali memadamkan niat baik. JejakDonasi hadir sebagai jembatan antara empati masyarakat dan <strong class="text-slate-900">transparansi mutlak</strong>. Kami tidak menggunakan janji manis, kami menggunakan <strong class="text-slate-900">Matematika & Kriptografi</strong> (Web2.5) untuk memastikan tidak ada satu sen pun dana Anda yang lenyap tanpa jejak audit.
-            </p>
-        </div>
-    </section>
-
-    <!-- 5. CARA KERJA -->
-    <section id="how-it-works" class="py-32 px-6 max-w-[90rem] mx-auto relative z-10">
+    <!-- CARA KERJA -->
+    <section id="how-it-works" class="py-32 px-6 max-w-[90rem] mx-auto relative z-10 border-t border-slate-200">
         <div class="mb-20 text-center md:text-left">
             <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 mb-4">Bagaimana Kami Menjaga Amanah?</h2>
             <p class="text-slate-500 text-lg font-medium">Proses transparan dari dompet Anda hingga ke tangan mereka yang membutuhkan.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16 relative">
-            <div class="hidden md:block absolute top-12 left-[10%] right-[10%] h-[2px] bg-slate-200 z-0 border-dashed border-t-2 border-slate-300"></div>
+            <div class="hidden md:block absolute top-12 left-[10%] right-[10%] h-[2px] z-0 border-dashed border-t-2 border-slate-300"></div>
 
-            <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-xl mb-6 shadow-lg">1</div>
+            <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-xl mb-6 shadow-md">1</div>
                 <h3 class="text-xl font-bold text-slate-900 mb-3">Donasi Rupiah Biasa</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">Anda menyumbang menggunakan Rupiah via transfer Bank atau QRIS. Sangat praktis seperti biasa.</p>
+                <p class="text-slate-600 text-sm leading-relaxed">Menyumbang menggunakan Rupiah via transfer Bank atau QRIS. Sangat praktis.</p>
             </div>
-
-            <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-xl mb-6 shadow-lg">2</div>
+            <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-xl mb-6 shadow-md">2</div>
                 <h3 class="text-xl font-bold text-slate-900 mb-3">Penyaluran Dana</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">Dana disalurkan ke lapangan untuk dibelanjakan sesuai kebutuhan kampanye (Misal: beli beras).</p>
+                <p class="text-slate-600 text-sm leading-relaxed">Dana disalurkan ke relawan lapangan untuk dibelanjakan sesuai kebutuhan.</p>
             </div>
-
-            <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-xl mb-6 shadow-lg">3</div>
+            <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-xl mb-6 shadow-md">3</div>
                 <h3 class="text-xl font-bold text-slate-900 mb-3">Unggah Bukti Nota</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">Relawan wajib mengunggah foto BUKTI NOTA belanja dan laporan pengeluaran ke sistem JejakDonasi.</p>
+                <p class="text-slate-600 text-sm leading-relaxed">Relawan wajib mengunggah foto BUKTI NOTA ke sistem JejakDonasi.</p>
             </div>
-
             <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-xl">
-                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-slate-900 font-black text-xl mb-6 shadow-lg">4</div>
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-slate-900 font-black text-xl mb-6 shadow-md">4</div>
                 <h3 class="text-xl font-bold text-white mb-3">Kunci Permanen</h3>
-                <p class="text-slate-300 text-sm leading-relaxed">Bukti nota <strong class="text-white">dikunci permanen menggunakan teknologi Blockchain (Buku Besar Digital)</strong>. Tak bisa diubah.</p>
+                <p class="text-slate-300 text-sm leading-relaxed">Bukti nota <strong class="text-white">dikunci permanen menggunakan teknologi Blockchain</strong>. Tak bisa diubah.</p>
             </div>
         </div>
 
-        <!-- Box Kelebihan & Kekurangan -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-3 rounded-[2.5rem] border border-slate-200 shadow-sm">
             <div class="bg-emerald-50 border border-emerald-100 rounded-[2rem] p-8 md:p-10">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 bg-emerald-200/50 rounded-full flex items-center justify-center text-emerald-600">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </div>
+                    <div class="w-12 h-12 bg-emerald-200/50 rounded-full flex items-center justify-center text-emerald-600"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
                     <h4 class="text-xl font-bold text-emerald-900">Kelebihan: Anti-Korupsi</h4>
                 </div>
-                <p class="text-emerald-800 leading-relaxed font-medium">
-                    <strong class="text-emerald-950 font-bold">Data tidak bisa dihapus atau dikorupsi siapapun.</strong> Setiap pengeluaran dicatat di "Buku Besar Digital" yang tak bisa diedit. Bukti nota bisa diaudit oleh siapa saja.
-                </p>
+                <p class="text-emerald-800 leading-relaxed font-medium">Setiap pengeluaran dicatat di "Buku Besar Digital" yang tak bisa diedit. Bukti nota bisa diaudit oleh siapa saja.</p>
             </div>
-
             <div class="bg-amber-50 border border-amber-100 rounded-[2rem] p-8 md:p-10">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 bg-amber-200/50 rounded-full flex items-center justify-center text-amber-600">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </div>
+                    <div class="w-12 h-12 bg-amber-200/50 rounded-full flex items-center justify-center text-amber-600"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
                     <h4 class="text-xl font-bold text-amber-900">Kekurangan: Validasi Lama</h4>
                 </div>
-                <p class="text-amber-800 leading-relaxed font-medium">
-                    <strong class="text-amber-950 font-bold">Pencairan sedikit lebih lama.</strong> Karena sistem keamanan kami ketat, relawan harus melalui proses validasi bukti nota dari sistem kami sebelum dana baru bisa dicairkan.
-                </p>
+                <p class="text-amber-800 leading-relaxed font-medium">Karena sistem keamanan ketat, relawan harus melalui proses validasi bukti nota dari sistem kami sebelum dana cair.</p>
             </div>
         </div>
     </section>
 
-    <!-- 6. DAFTAR KAMPANYE DINAMIS (WIRING DATABASE) -->
+    <!-- PROGRAM KEMANUSIAAN -->
     <section id="initiatives" class="py-24 px-6 max-w-[90rem] mx-auto relative z-10">
         <div class="mb-16 text-center md:text-left" x-data="{ shown: false }" x-intersect.once="shown = true">
             <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 mb-4 transition-all duration-1000 transform" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">Program Kemanusiaan</h2>
@@ -265,9 +162,7 @@
             @forelse ($campaigns ?? [] as $campaign)
                 @php
                     $percent = $campaign->target_amount > 0 ? min(100, round(($campaign->collected_amount / $campaign->target_amount) * 100)) : 0;
-                    // Fallback gambar dinamis dengan file yang sudah dipastikan ada
-                    $fallbackIndex = (($loop->iteration % 11) + 1);
-                    $fallbackImage = asset('images/bg' . $fallbackIndex . '.avif');
+                    $fallbackImage = asset('images/bg1.avif');
                     $imageUrl = $campaign->image ? asset('storage/' . $campaign->image) : $fallbackImage;
                 @endphp
                 <div class="group bg-white border border-slate-200 rounded-[2rem] overflow-hidden hover:border-slate-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-500 p-3 flex flex-col">
@@ -286,7 +181,6 @@
                             <div class="w-full bg-slate-100 rounded-full h-2 mb-6 overflow-hidden">
                                 <div class="bg-emerald-500 h-full rounded-full" style="width: {{ $percent }}%"></div>
                             </div>
-                            
                             <button @click="openDonation('{{ addslashes($campaign->title) }}', {{ $campaign->id }})" class="w-full bg-slate-900 text-white py-3.5 rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors shadow-md hover:shadow-lg">
                                 Bantu Sekarang
                             </button>
@@ -301,7 +195,7 @@
         </div>
     </section>
 
-    <!-- 7. TRANSPARANSI PENYALURAN DANA (PUBLIC LEDGER) -->
+    <!-- TRANSPARANSI PENYALURAN DANA (PUBLIC LEDGER) -->
     <section id="ledger" class="py-32 px-6 max-w-[90rem] mx-auto relative z-10 border-t border-slate-200">
         <div class="mb-12" x-data="{ shown: false }" x-intersect.once="shown = true">
             <h2 class="text-3xl md:text-5xl font-black tracking-tighter text-slate-900 mb-4 transition-all duration-1000 transform" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">Transparansi Penyaluran Dana</h2>
@@ -328,15 +222,8 @@
                             <td class="p-6 text-slate-600 font-medium">{{ $tx->campaign->title ?? '-' }}</td>
                             <td class="p-6 text-slate-900 font-mono font-bold whitespace-nowrap">Rp {{ number_format($tx->amount, 0, ',', '.') }}</td>
                             <td class="p-6 text-center">
-                                <button @click="openReceipt({
-                                    store: 'Relawan Lapangan (Verified)',
-                                    date: '{{ $tx->created_at->format('d/m/Y H:i') }}',
-                                    purpose: '{{ addslashes($tx->donor_name) }}',
-                                    amount: '{{ number_format($tx->amount, 0, ',', '.') }}',
-                                    hash: '{{ $tx->tx_hash }}'
-                                })" class="inline-flex items-center gap-2 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2.5 rounded-lg border border-blue-200 transition-colors shadow-sm whitespace-nowrap">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
-                                    Lihat Nota
+                                <button @click="openReceipt({ store: 'Relawan Lapangan', date: '{{ $tx->created_at->format('d/m/Y H:i') }}', purpose: '{{ addslashes($tx->donor_name) }}', amount: '{{ number_format($tx->amount, 0, ',', '.') }}', hash: '{{ $tx->tx_hash }}' })" class="inline-flex items-center gap-2 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2.5 rounded-lg border border-blue-200 transition-colors shadow-sm whitespace-nowrap">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg> Lihat Nota
                                 </button>
                             </td>
                             <td class="p-6 text-right">
@@ -344,17 +231,15 @@
                                     <svg class="w-3.5 h-3.5" fill="solid" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                                     Terkunci Permanen
                                 </span>
-                                <div class="mt-3 text-[11px] font-mono text-slate-500 bg-slate-100 p-2 rounded-lg border border-slate-200 flex items-center justify-between gap-2 max-w-[200px] ml-auto shadow-sm">
+                                <div class="mt-3 text-[11px] font-mono text-slate-500 bg-slate-100 p-2 rounded-lg border border-slate-200 flex items-center justify-between gap-2 max-w-[200px] ml-auto">
                                     <span class="truncate">{{ substr($tx->tx_hash, 0, 10) }}...{{ substr($tx->tx_hash, -10) }}</span>
-                                    <button onclick="navigator.clipboard.writeText('{{ $tx->tx_hash }}'); alert('Tx Hash berhasil disalin!')" class="text-slate-400 hover:text-slate-700 shrink-0" title="Salin Full Hash">
-                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                                    </button>
+                                    <button onclick="navigator.clipboard.writeText('{{ $tx->tx_hash }}'); alert('Tx Hash berhasil disalin!')" class="text-slate-400 hover:text-slate-700 shrink-0"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg></button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-8 text-center text-slate-500 font-bold bg-slate-50">Belum ada penyaluran dana yang dicatat di Ledger Publik.</td>
+                            <td colspan="6" class="p-8 text-center text-slate-500 font-bold bg-white">Belum ada penyaluran dana yang dicatat di Ledger Publik.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -375,7 +260,7 @@
         </div>
     </footer>
 
-    <!-- MODAL 1: FORM CHECKOUT DONASI -->
+    <!-- MODAL DONASI -->
     <div x-show="isDonationOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div x-show="isDonationOpen" x-transition.opacity.duration.300ms class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" @click="isDonationOpen = false"></div>
         <div class="flex min-h-full items-center justify-center p-4 sm:p-0 relative z-10">
@@ -394,34 +279,33 @@
                 <form action="{{ route('donate') }}" method="POST" x-data="{ amount: '' }" class="space-y-6">
                     @csrf
                     <input type="hidden" name="campaign_id" x-bind:value="selectedCampaignId">
-                    
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-3">Pilih Nominal Donasi</label>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            <button type="button" @click="amount = 50000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 50.000</button>
-                            <button type="button" @click="amount = 100000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 100.000</button>
-                            <button type="button" @click="amount = 250000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 250.000</button>
-                            <button type="button" @click="amount = 500000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 500.000</button>
-                            <button type="button" @click="amount = 1000000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 1.000.000</button>
+                            <button type="button" @click="amount = 50000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 50.000</button>
+                            <button type="button" @click="amount = 100000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 100.000</button>
+                            <button type="button" @click="amount = 250000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 250.000</button>
+                            <button type="button" @click="amount = 500000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 500.000</button>
+                            <button type="button" @click="amount = 1000000" class="border border-slate-300 bg-white text-slate-700 rounded-xl py-3 text-sm font-bold hover:border-slate-900 focus:bg-slate-900 focus:text-white transition-colors">Rp 1.000.000</button>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 font-bold text-sm">Rp</span>
-                                <input type="number" name="amount" x-model="amount" required placeholder="Lainnya" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl py-3 pl-9 pr-3 text-sm font-bold placeholder-slate-400 focus:outline-none focus:border-slate-900 transition-colors">
+                                <input type="number" name="amount" x-model="amount" required placeholder="Lainnya" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl py-3 pl-9 pr-3 text-sm font-bold focus:outline-none focus:border-slate-900 transition-colors">
                             </div>
                         </div>
                     </div>
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Nama Anda</label>
-                            <input type="text" name="donor_name" placeholder="Masukkan nama (Boleh kosong)" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3.5 text-sm placeholder-slate-400 focus:outline-none focus:border-slate-900 transition-colors font-medium">
+                            <input type="text" name="donor_name" placeholder="Masukkan nama (Boleh kosong)" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:border-slate-900 transition-colors">
                         </div>
                         <label class="flex items-center gap-3 cursor-pointer group">
-                            <input type="checkbox" name="is_anonymous" value="1" class="w-5 h-5 rounded border-slate-300 bg-white checked:bg-slate-900 focus:ring-0 text-slate-900 transition-colors cursor-pointer">
+                            <input type="checkbox" name="is_anonymous" value="1" class="w-5 h-5 rounded border-slate-300 bg-white checked:bg-slate-900 focus:ring-0 text-slate-900 cursor-pointer">
                             <span class="text-sm text-slate-500 font-medium group-hover:text-slate-900 transition-colors">Sembunyikan nama (Anonim)</span>
                         </label>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">Metode Pembayaran</label>
-                        <select name="payment_method" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-slate-900 transition-colors cursor-pointer font-medium">
+                        <select name="payment_method" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3.5 text-sm font-medium focus:outline-none focus:border-slate-900 transition-colors cursor-pointer">
                             <option value="QRIS">QRIS (Semua e-Wallet & M-Banking)</option>
                             <option value="Transfer Bank BCA">Transfer Bank BCA</option>
                             <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
@@ -429,16 +313,14 @@
                         </select>
                     </div>
                     <div class="pt-2">
-                        <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl text-base font-bold hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20">
-                            Lanjutkan Transaksi
-                        </button>
+                        <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl text-base font-bold hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20">Lanjutkan Transaksi</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 2: LAPOR KEJANGGALAN -->
+    <!-- MODAL LAPOR KEJANGGALAN -->
     <div x-show="isReportOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div x-show="isReportOpen" x-transition.opacity.duration.300ms class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" @click="isReportOpen = false"></div>
         <div class="flex min-h-full items-center justify-center p-4 sm:p-0 relative z-10">
@@ -459,22 +341,21 @@
                 </div>
                 <p class="text-slate-500 text-sm mb-8 font-medium">Bantu kami menjaga transparansi. Laporkan jika Anda menemukan ketidaksesuaian antara nota belanja dan barang di lapangan.</p>
 
-                <!-- FORM TERKONEKSI KE CONTROLLER -->
                 <form action="{{ route('reports.store') }}" method="POST" class="space-y-5">
                     @csrf
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Nama Pelapor</label>
-                            <input type="text" name="name" required placeholder="Nama Anda" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 transition-colors font-medium">
+                            <input type="text" name="name" required placeholder="Nama Anda" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 font-medium">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Email</label>
-                            <input type="email" name="email" required placeholder="Email untuk dihubungi" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 transition-colors font-medium">
+                            <input type="email" name="email" required placeholder="Email untuk dihubungi" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 font-medium">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-2">Pilih Kampanye yang Dicurigai</label>
-                        <select name="campaign_name" required class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 transition-colors cursor-pointer appearance-none font-medium">
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Kampanye yang Dicurigai</label>
+                        <select name="campaign_name" required class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 cursor-pointer font-medium">
                             <option value="">-- Pilih Kampanye --</option>
                             @foreach($campaigns ?? [] as $camp)
                                 <option value="{{ $camp->title }}">{{ $camp->title }}</option>
@@ -484,22 +365,19 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">Deskripsi Bukti / Alasan</label>
-                        <textarea name="description" required rows="4" placeholder="Jelaskan secara detail kejanggalan pada nota yang Anda temukan..." class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 transition-colors resize-none font-medium"></textarea>
+                        <textarea name="description" required rows="4" placeholder="Jelaskan secara detail kejanggalan pada nota yang Anda temukan..." class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500 resize-none font-medium"></textarea>
                     </div>
                     <div class="pt-2">
-                        <button type="submit" class="w-full bg-red-600 text-white py-4 rounded-xl text-sm font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20">
-                            Kirim Laporan
-                        </button>
+                        <button type="submit" class="w-full bg-red-600 text-white py-4 rounded-xl text-sm font-bold hover:bg-red-700 shadow-lg shadow-red-600/20">Kirim Laporan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 3: BUKTI NOTA DIGITAL (HTML/CSS MURNI) -->
+    <!-- MODAL NOTA DIGITAL -->
     <div x-show="isReceiptOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div x-show="isReceiptOpen" x-transition.opacity.duration.300ms class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="isReceiptOpen = false"></div>
-
         <div class="flex min-h-full items-center justify-center p-4 sm:p-0 relative z-10">
             <div x-show="isReceiptOpen" 
                  x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
@@ -512,7 +390,6 @@
                 
                 <div class="bg-white text-slate-900 font-mono text-sm relative shadow-2xl">
                     <div class="receipt-edge w-full bg-transparent absolute -top-[10px] left-0"></div>
-                    
                     <div class="p-8 pb-12 relative overflow-hidden">
                         <div class="text-center border-b-2 border-dashed border-slate-300 pb-5 mb-5">
                             <h3 class="font-bold text-xl uppercase tracking-widest mb-1" x-text="selectedLedger.store"></h3>
@@ -531,7 +408,7 @@
                         
                         <div class="border-b-2 border-dashed border-slate-300 pb-5 mb-5 space-y-3">
                             <div class="flex justify-between font-bold text-xs uppercase tracking-wider mb-2">
-                                <span>Item Belanja Lapangan</span>
+                                <span>Item Lapangan</span>
                                 <span>Nominal</span>
                             </div>
                             <div class="flex justify-between items-start text-xs font-bold">
@@ -557,14 +434,13 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="receipt-edge-bottom w-full bg-transparent absolute -bottom-[10px] left-0"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Alpine Data State -->
+    <!-- ALPINE LOGIC -->
     <script>
         function appData() {
             return {
